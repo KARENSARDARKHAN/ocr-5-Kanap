@@ -1,15 +1,15 @@
-//Récuperation du contenu du localStorage dans la variable cart dans le cadre d'un panier vide
+/**Récuperation du contenu du localStorage dans la variable cart 
+ * dans le cadre d'un panier vide*/
 let cart = JSON.parse(localStorage.getItem("cart") || "{}");
 
-//Récuperation des informations des produits via l'api et stockage des données
-//collectées daans la variable product
+/**Récuperation des informations des produits via l'api et stockage des données
+collectées dans la variable product*/
 let url = new URLSearchParams(window.location.search);
 let id = url.get("id");
 let response = await fetch(`http://localhost:3000/api/products/${id}`);
 let product = await response.json();
 
-
-// Répartition dans le dom des données d'information sur les produits provenant de l'API
+/**Répartition dans le dom des données d'information sur les produits provenant de l'API*/
 let domPageTitle = document.getElementsByTagName("title");
 domPageTitle.innerHTML = product.name;
 
@@ -31,7 +31,8 @@ let arrayHtmlOptions = product.colors.map(function (color) {
 });
 domColorInputSelect.innerHTML = arrayHtmlOptions.join("");
 
-/**Fonctions permettant l'affichage du nombre d'articles actuellement dans le panier dans la navbar  */
+/**Fonctions permettant l'affichage du nombre d'articles actuellement 
+ * dans le panier dans la navbar  */
 
 function updateCartTotal(cart) {
   let totalQuantity = 0;
@@ -46,21 +47,22 @@ function updateCartTotal(cart) {
 
 updateCartTotal(cart);
 
-/**Fonctions permettant l'affichage de messages d'erreur 
+/**Fonctions permettant l'affichage de messages d'erreur
  * et de validation au clic sur add to cart */
 function optionMissing() {
-  document.querySelector(".orderError").textContent =
-    `Choisir une couleur et une quantité entre 1 et 100`;
+  document.querySelector(
+    ".orderError"
+  ).textContent = `Choisir une couleur et une quantité entre 1 et 100`;
 }
 
 function productAdded() {
-  document.querySelector(".orderValidation").textContent =
-    `Sélection ajoutée au panier`;
+  document.querySelector(
+    ".orderValidation"
+  ).textContent = `Sélection ajoutée au panier`;
 
-   let hideErrorMessage = document.querySelector(".orderError");
-   hideErrorMessage.remove();
+  let hideErrorMessage = document.querySelector(".orderError");
+  hideErrorMessage.remove();
 }
-
 
 /**Gestion de l'ajout des produits au panier*/
 
@@ -76,7 +78,7 @@ domAddToCartButton.addEventListener("click", function () {
   /**Pour une quantité supérieure à 0, l'élément est ajouté au panier*/
   if (quantity > 0) {
     let cartKey = `${id}#${domColorInputSelect.value}`;
-    productAdded();    
+    productAdded();
 
     /**Si le panier ne contient aucune entrée pour cette id et cette color,
     l'entrée id#selectedColor sera initialisée à 0*/
@@ -96,15 +98,7 @@ domAddToCartButton.addEventListener("click", function () {
     optionMissing();
   }
 
-  //appel de la fonction qui affiche la quantité dans le panier en haut de la page au moment du clic
+  /**appel de la fonction qui affiche la quantité dans le panier 
+   * en haut de la page au moment du clic*/
   updateCartTotal(cart);
 });
-
-
-
-
-
-
-
-
-

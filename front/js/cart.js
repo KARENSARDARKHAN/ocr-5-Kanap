@@ -116,6 +116,8 @@ function validateForm() {
 /**Chargement du contenu du panier à partir du local storage dès l'ouverture de la page cart*/
 let cart = JSON.parse(localStorage.getItem("cart") || "{}");
 
+console.log(cart);
+
 /**Création d'un storage temporaire pour accéder plus rapidement aux informations
 des produits déja selectionnés dans le panier sans avoir à interroger à nouveau l'api*/
 let productsMemo = {};
@@ -123,7 +125,7 @@ let productsMemo = {};
 /**Récupèration de l'élément cart__items dans le dom afin de modifier le contenu HTML ultérieurement*/
 let domCartItems = document.getElementById("cart__items");
 
-//Boucle for in pour parcourir les propriétés d'un object une par une*/
+/**Boucle for in pour parcourir les propriétés d'un object une par une*/
 for (let cartKey in cart) {
   /**Séparation des proprétés de cartKey poutr obtenir un array de 2 éléments*/
   let [id, color] = cartKey.split("#");
@@ -141,7 +143,8 @@ for (let cartKey in cart) {
     productsMemo[id] = product;
   } else {
    
-    /**Au cas où les informations du produit trouvent déja dans productMemo, ses informations y seront récupérées*/
+    /**Au cas où les informations du produit trouvent déja dans productMemo, 
+     * ses informations y seront récupérées*/
     product = productsMemo[id];
   }
 
@@ -155,7 +158,7 @@ updateCartTotal(cart);
 
 /**Récupération des éléments du dom relatifs aux boutons supprimer et stockage
 de ces éléments dans la variable domDeleteButtons qui est un array qui sera
-parcouru pour ajouter les évènements onClick un par un*/
+parcouru pour ajouter les évènements on Click un par un*/
 let domDeleteButtons = document.querySelectorAll(".deleteItem");
 for (let index = 0; index < domDeleteButtons.length; index++) {
   let domDeleteButton = domDeleteButtons[index];
@@ -215,8 +218,7 @@ domOrderForm.addEventListener("submit", async function (event) {
   }
 
   if (Object.keys(cart).length === 0) {
-    alert(`Vous devez ajouter des produits à 
-      votre panier pour passer une commande`);
+    alert(`Formulaire invalide et/ou Panier vide`);
     return;
   }
 
