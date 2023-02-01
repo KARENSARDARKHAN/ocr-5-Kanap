@@ -52,16 +52,20 @@ updateCartTotal(cart);
 function optionMissing() {
   document.querySelector(
     ".orderError"
-  ).textContent = `Choisir une couleur et une quantité entre 1 et 100`;
+  ).textContent = `Sélectionnez une quantité entre 1 et 100 par article de même couleur, le cumul dans le panier est limité à 100 articles`;
+
+  window.location.reload();
 }
 
 function productAdded() {
-  document.querySelector(
-    ".orderValidation"
-  ).textContent = `Sélection ajoutée au panier`;
-
   let hideErrorMessage = document.querySelector(".orderError");
   hideErrorMessage.remove();
+
+  document.querySelector(".orderValidation").textContent =
+    `Sélection ajoutée au panier`;
+
+  window.location.reload();
+  
 }
 
 /**Gestion de l'ajout des produits au panier*/
@@ -75,12 +79,12 @@ domAddToCartButton.addEventListener("click", function () {
   let domQuantityInput = document.getElementById("quantity");
   let quantity = Number(domQuantityInput.value);
 
-  /**Pour une quantité supérieure à 0, l'élément est ajouté au panier*/
-  if (quantity > 0) {
+  /**Pour une quantité supérieure à 0 et inférieure à 101, l'élément est ajouté au panier*/
+  if (quantity > 0 && quantity < 101) {
     let cartKey = `${id}#${domColorInputSelect.value}`;
-    productAdded();
+    
 
-    /**Si le panier ne contient aucune entrée pour cette id et cette color,
+    /**Si le panier ne contient aucune entrée pour cette id et cette couleur,
     l'entrée id#selectedColor sera initialisée à 0*/
     if (!cart[cartKey]) {
       cart[cartKey] = 0;
@@ -89,16 +93,23 @@ domAddToCartButton.addEventListener("click", function () {
     /**Si l'entrée id#selectedColor existe, la quantité sera ajoutée à l'entrée correspondante*/
     cart[cartKey] = cart[cartKey] + quantity;
 
+    if (cart[cartKey] > 100) {
+      optionMissing();
+      return false
+    }
+ 
     /**Dès la mise à jour de la variable cart avec les bonnes quantités,
     tout le panier est sauvegardé dans le localStorage*/
     localStorage.setItem("cart", JSON.stringify(cart));
-
+    productAdded();
+    
     /**Affichage d'un message d'avertissement si la quantité est égale à zéro*/
-  } else {
-    optionMissing();
-  }
+   } else {
+     optionMissing();
+   }
 
   /**appel de la fonction qui affiche la quantité dans le panier 
    * en haut de la page au moment du clic*/
   updateCartTotal(cart);
 });
+

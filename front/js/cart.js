@@ -15,7 +15,7 @@ function getCartItemCardHtml(product, color, quantity) {
       <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
           <p>Qté : </p>
-          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantity}">
+          <input type="number" onKeyDown="return false" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantity}">
         </div>
         <div class="cart__item__content__settings__delete">
           <p class="deleteItem">Supprimer</p>
@@ -29,7 +29,7 @@ function getCartItemCardHtml(product, color, quantity) {
 function updateCartTotal(cart) {
   let totalQuantity = 0;
   let totalPrice = 0;
- 
+
   /**Boucle for pour récupération des éléments utiles au calcul des totaux*/
   for (let cartKey in cart) {
     let [id, color] = cartKey.split("#");
@@ -42,12 +42,12 @@ function updateCartTotal(cart) {
   /**Après calcul des variables de cumul, on modifie le dom avec les valeurs obtenues*/
   let domTotalQuantity = document.getElementById("totalQuantity");
   domTotalQuantity.innerHTML = totalQuantity;
-  
+
   let domTotalPrice = document.getElementById("totalPrice");
   domTotalPrice.innerHTML = totalPrice.toFixed(2);
 
-    let domTotalQuantityTop = document.getElementById("cartTotalItems");
-    domTotalQuantityTop.innerHTML = totalQuantity;
+  let domTotalQuantityTop = document.getElementById("cartTotalItems");
+  domTotalQuantityTop.innerHTML = totalQuantity;
 }
 
 /**Transformation du cart en une liste d'id de produit*/
@@ -136,14 +136,12 @@ for (let cartKey in cart) {
   /**Demande des informations des produits ajoutés au panier via productsMemo ou via l'api*/
   let product;
   if (!productsMemo[id]) {
-
     /**Si le produit n'est pas dans productMemo, on va chercher les informations dans l'api*/
     let response = await fetch(`http://localhost:3000/api/products/${id}`);
     product = await response.json();
     productsMemo[id] = product;
   } else {
-   
-    /**Au cas où les informations du produit trouvent déja dans productMemo, 
+    /**Au cas où les informations du produit trouvent déja dans productMemo,
      * ses informations y seront récupérées*/
     product = productsMemo[id];
   }
@@ -169,8 +167,7 @@ for (let index = 0; index < domDeleteButtons.length; index++) {
   let id = domCartArticle.dataset.id;
   let color = domCartArticle.dataset.color;
   domDeleteButton.addEventListener("click", function (event) {
-   
-    /**Fonction executé au click sur le bouton supprimer : supprime l'article dans
+    /**Fonction executée au click sur le bouton supprimer : supprime l'article dans
     la variable cart, update le panier dans localStorage, supprime l'article du dom
     et update le total*/
     delete cart[`${id}#${color}`];
@@ -188,7 +185,6 @@ for (let index = 0; index < domQuantityInputs.length; index++) {
   let id = domCartArticle.dataset.id;
   let color = domCartArticle.dataset.color;
   domQuantityInput.addEventListener("change", function (event) {
-    
     /**Fonction executée à chaque modification de la quantité d'un item du panier :
     update l'entrée dans notre variable cart ou on supprime l'entrée si la quantité est à 0,
     sauvegarde le panier dans localStorage, update le total*/
@@ -202,7 +198,7 @@ for (let index = 0; index < domQuantityInputs.length; index++) {
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartTotal(cart);
   });
-}  
+}
 
 /**Récupération de l'élément form dans le dom et adjonction d'un addEventListener
 à la soumission du formulaire*/
